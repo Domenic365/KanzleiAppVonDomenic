@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {Customer} from "../types";
 import {BackendService} from "../backend.service";
 import {Router} from "@angular/router";
-import {collection, collectionData, Firestore} from "@angular/fire/firestore";
+import {collectionData} from "@angular/fire/firestore";
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -41,19 +41,16 @@ export class CustomerDashboardComponent implements OnInit{
   displayedColumns = this.columns.map(c => c.columnDef);
   backendService = inject(BackendService)
   router = inject(Router);
-
-  item$: any;
-  firestore: Firestore = inject(Firestore);
+  customerCollection: any;
 
   ngOnInit() {
-    const itemCollection = collection(this.firestore, 'mandanten');
-    this.item$ = collectionData(itemCollection, {idField: 'id'});
-    this.item$.subscribe((value: any) =>{this.dataSource = value; console.log(value)})
+    this.customerCollection = collectionData(this.backendService.getCollection(), {idField: 'id'});
+    this.customerCollection.subscribe((value: any) =>{this.dataSource = value})
   }
 
 
   openCustomer(customerData: Customer) {
-    this.router.navigate(["editCustomer/1"]).then(r => this.backendService.selectedCustomer.set(customerData))
+    this.router.navigate(["editCustomer/" + customerData.id])
   }
 
 

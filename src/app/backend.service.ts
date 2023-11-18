@@ -1,14 +1,21 @@
-import {Injectable, signal} from '@angular/core';
-import {MatTableDataSource} from "@angular/material/table";
+import {inject, Injectable, signal} from '@angular/core';
+import {collection, doc, Firestore} from "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService {
-  customer: MatTableDataSource<any> = new MatTableDataSource<any>([{name: "Domenic", address: "Scheffelstr. 32, 47057 Duisburg", employees: []}])
-  selectedCustomer = signal({})
+  firestore = inject(Firestore);
 
-  constructor() {
+  getCollection(){
+    return collection(this.firestore, 'mandanten');
   }
 
+  getDocument(docID: string | null){
+    if (docID){
+          return  doc(this.getCollection(), docID)
+    } else {
+      return doc(this.getCollection(), "")
+    }
+  }
 }

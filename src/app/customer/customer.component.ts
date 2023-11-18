@@ -1,7 +1,10 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, WritableSignal} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BackendService} from "../backend.service";
+import {collection, collectionData, doc, Firestore, getDoc, getFirestore, setDoc} from "@angular/fire/firestore";
+import firebase from "firebase/compat";
+import app = firebase.app;
 
 @Component({
   selector: 'app-customer',
@@ -10,26 +13,54 @@ import {BackendService} from "../backend.service";
 })
 export class CustomerComponent implements OnInit {
   customer: any;
-  customerID: FormControl<number> | any;
-  firstName: FormControl<string> | any;
-  secondName: FormControl<string> | any;
-  company: FormControl<string> | any;
-  address: FormControl<string> | any;
+  customerID = new FormControl("Wird geladen");
+  firstName = new FormControl("Wird geladen");
+  secondName = new FormControl("Wird geladen");
+  company = new FormControl("Wird geladen");
+  address = new FormControl("Wird geladen");
   router = inject(Router)
   route = inject(ActivatedRoute)
+  firestore = inject(Firestore)
   backendService = inject(BackendService)
+  currentParams: any;
+
 
   ngOnInit() {
-    this.backendService.selectedCustomer.update(value => this.customer = value)
-    this.customerID = new FormControl(this.customer.customerID)
-    this.firstName = new FormControl(this.customer.firstName)
-    this.secondName = new FormControl(this.customer.secondName)
-    this.company = new FormControl(this.customer.company)
-    this.address = new FormControl(this.customer.address)
-    this.route.paramMap.subscribe(params => {console.log(params)})
+    this.route.paramMap.subscribe(params => {
+      this.loadCustomer(params);
+      this.currentParams = params
+    })
   }
 
+  private loadCustomer(params: ParamMap) {
+    collectionData(this.backendService.getCollection()).subscribe(value => {
+      getDoc(this.getDocument(params)).then(doc => {
+        if (doc.exists()) {
+          this.customer = doc.data();
+          this.setCustomerValues();
+        }
+      })
+    })
+  }
+
+  private getDocument(params: ParamMap) {
+    return this.backendService.getDocument(params.get("id"));
+  }
+
+  private setCustomerValues() {
+    this.customerID.setValue(this.customer.customerID)
+    this.firstName.setValue(this.customer.firstName)
+    this.secondName.setValue(this.customer.secondName)
+    this.company.setValue(this.customer.company)
+    this.address.setValue(this.customer.address)
+  }
+
+
   backToDashboard() {
-    this.router.navigate(["customerDashboard"]).then(r => this.customer = {})
+    this.router.navigate(["customerDashboard"]).then(r => this.customer = undefined)
+  }
+
+  addOrEditCustomer() {
+    this.getDocument(this.currentParams);
   }
 }

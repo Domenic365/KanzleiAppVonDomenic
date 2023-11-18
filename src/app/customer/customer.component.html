@@ -3,8 +3,9 @@
 </button>
 
 
-<form>
-  <section>
+<form (submit)="addOrEditCustomer()">
+  <div>
+      <section>
     <mat-form-field>
       <mat-label>Mandantennummer</mat-label>
       <input [formControl]="customerID" matInput>
@@ -30,5 +31,9 @@
       <input [formControl]="address" matInput>
     </mat-form-field>
   </section>
+  </div>
+  <div class="buttonToRight">
+      <button mat-button >Änderungen speichern</button>
+  </div>
 
 </form>

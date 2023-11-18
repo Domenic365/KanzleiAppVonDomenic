@@ -5,4 +5,5 @@ export type Customer =  {
   company: string;
   address: string;
   employees: [];
+  id: number;
 }

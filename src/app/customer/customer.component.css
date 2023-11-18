@@ -11,4 +11,17 @@ section {
   gap: 1rem;
 }
 
+form{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
+.buttonToRight{
+  display: flex;
+  justify-content: end;
+}
+
+button{
+  max-width: 12rem;
+}
