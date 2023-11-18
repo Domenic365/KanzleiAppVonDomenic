@@ -1,0 +1,14 @@
+:host {
+  padding: 1rem;
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+
+
+section {
+  display: flex;
+  gap: 1rem;
+}
+
+

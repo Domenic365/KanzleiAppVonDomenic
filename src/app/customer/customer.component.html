@@ -1,0 +1,34 @@
+<button (click)="backToDashboard()" mat-icon-button>
+  <mat-icon>arrow_back</mat-icon>
+</button>
+
+
+<form>
+  <section>
+    <mat-form-field>
+      <mat-label>Mandantennummer</mat-label>
+      <input [formControl]="customerID" matInput>
+    </mat-form-field>
+  </section>
+  <section>
+    <mat-form-field>
+      <mat-label>Vorname</mat-label>
+      <input [formControl]="firstName" matInput>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Nachname</mat-label>
+      <input [formControl]="secondName" matInput>
+    </mat-form-field>
+  </section>
+  <section>
+    <mat-form-field>
+      <mat-label>Unternehmensname</mat-label>
+      <input [formControl]="company" matInput>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Anschrift</mat-label>
+      <input [formControl]="address" matInput>
+    </mat-form-field>
+  </section>
+
+</form>
