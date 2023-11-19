@@ -3,32 +3,32 @@
 </button>
 
 
-<form (submit)="addOrEditCustomer()">
+<form [formGroup]="customerForm" (ngSubmit)="addOrEditCustomer()">
   <div>
       <section>
     <mat-form-field>
       <mat-label>Mandantennummer</mat-label>
-      <input [formControl]="customerID" matInput>
+      <input formControlName="customerID" matInput>
     </mat-form-field>
   </section>
   <section>
     <mat-form-field>
       <mat-label>Vorname</mat-label>
-      <input [formControl]="firstName" matInput>
+      <input formControlName="firstName" matInput>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Nachname</mat-label>
-      <input [formControl]="secondName" matInput>
+      <input formControlName="secondName" matInput>
     </mat-form-field>
   </section>
   <section>
     <mat-form-field>
       <mat-label>Unternehmensname</mat-label>
-      <input [formControl]="company" matInput>
+      <input formControlName="company" matInput>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Anschrift</mat-label>
-      <input [formControl]="address" matInput>
+      <input formControlName="address" matInput>
     </mat-form-field>
   </section>
   </div>

@@ -1,8 +1,17 @@
 import {Component, inject, OnInit, WritableSignal} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BackendService} from "../backend.service";
-import {collection, collectionData, doc, Firestore, getDoc, getFirestore, setDoc} from "@angular/fire/firestore";
+import {
+  collection,
+  collectionData,
+  doc,
+  Firestore,
+  getDoc,
+  getFirestore,
+  setDoc,
+  updateDoc
+} from "@angular/fire/firestore";
 import firebase from "firebase/compat";
 import app = firebase.app;
 
@@ -13,11 +22,16 @@ import app = firebase.app;
 })
 export class CustomerComponent implements OnInit {
   customer: any;
-  customerID = new FormControl("Wird geladen");
-  firstName = new FormControl("Wird geladen");
-  secondName = new FormControl("Wird geladen");
-  company = new FormControl("Wird geladen");
-  address = new FormControl("Wird geladen");
+  customerForm = new FormGroup(
+    {
+      customerID: new FormControl("Wird geladen"),
+      firstName: new FormControl("Wird geladen"),
+      secondName: new FormControl("Wird geladen"),
+      company: new FormControl("Wird geladen"),
+      address: new FormControl("Wird geladen"),
+    }
+  )
+
   router = inject(Router)
   route = inject(ActivatedRoute)
   firestore = inject(Firestore)
@@ -48,19 +62,26 @@ export class CustomerComponent implements OnInit {
   }
 
   private setCustomerValues() {
-    this.customerID.setValue(this.customer.customerID)
-    this.firstName.setValue(this.customer.firstName)
-    this.secondName.setValue(this.customer.secondName)
-    this.company.setValue(this.customer.company)
-    this.address.setValue(this.customer.address)
+    for (let controlsKey in this.customerForm.controls) {
+      this.getControl(controlsKey).setValue(this.customer[controlsKey])
+    }
   }
 
+
+  private getControl(key:string) {
+    const control =  this.customerForm.get(key)
+    if (control){
+      return control;
+    }
+
+    return new FormControl("");
+  }
 
   backToDashboard() {
     this.router.navigate(["customerDashboard"]).then(r => this.customer = undefined)
   }
 
   addOrEditCustomer() {
-    this.getDocument(this.currentParams);
+    updateDoc(this.getDocument(this.currentParams), this.customerForm.value)
   }
 }
