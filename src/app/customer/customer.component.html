@@ -1,3 +1,4 @@
+<!--suppress Annotator -->
 <button (click)="backToDashboard()" mat-icon-button>
   <mat-icon>arrow_back</mat-icon>
 </button>
@@ -32,14 +33,19 @@
       </mat-form-field>
     </section>
   </div>
+  <form formArrayName="employees"></form>
+
   <div class="buttonToRight">
-      <button mat-flat-button color="primary" >
-        @if(isNewCustomer){
-          Erstellen
-        } @else {
-          Änderungen speichern
-        }
-      </button>
+    @if(!isNewCustomer){
+    <button (click)="deleteCustomer()" type="button"  mat-flat-button color="warn">Löschen</button>
+    }
+    <button mat-flat-button color="primary">
+      @if(isNewCustomer){
+      Erstellen
+      } @else {
+      Änderungen speichern
+      }
+    </button>
   </div>
 
 </form>

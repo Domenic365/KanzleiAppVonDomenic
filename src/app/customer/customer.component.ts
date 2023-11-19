@@ -1,20 +1,15 @@
-import {Component, inject, OnInit, WritableSignal} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, inject, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormControl} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BackendService} from "../backend.service";
 import {
   addDoc,
-  collection,
-  collectionData,
-  doc,
+  collectionData, deleteDoc,
   Firestore,
   getDoc,
-  getFirestore,
-  setDoc,
   updateDoc
 } from "@angular/fire/firestore";
-import firebase from "firebase/compat";
-import app = firebase.app;
+
 
 @Component({
   selector: 'app-customer',
@@ -22,23 +17,25 @@ import app = firebase.app;
   styleUrl: './customer.component.css'
 })
 export class CustomerComponent implements OnInit {
+  router = inject(Router)
+  route = inject(ActivatedRoute)
+  firestore = inject(Firestore)
+  backendService = inject(BackendService)
+  fb = inject(FormBuilder)
+
   customer: any;
-  customerForm = new FormGroup(
+  currentParams: any;
+  isNewCustomer: boolean | undefined
+  customerForm = this.fb.group(
     {
       customerID: new FormControl(""),
       firstName: new FormControl(""),
       secondName: new FormControl(""),
       company: new FormControl(""),
       address: new FormControl(""),
+      employees: this.fb.array([this.fb.control('test')])
     }
   )
-
-  router = inject(Router)
-  route = inject(ActivatedRoute)
-  firestore = inject(Firestore)
-  backendService = inject(BackendService)
-  currentParams: any;
-  isNewCustomer: boolean | undefined
 
 
   ngOnInit() {
@@ -58,6 +55,9 @@ export class CustomerComponent implements OnInit {
         if (doc.exists()) {
           this.customer = doc.data();
           this.setCustomerValues();
+          this.customer.employees.forEach((employee: any) => {
+            (this.customerForm.get('employees') as FormArray).push(this.fb.control(employee));
+          });
         }
       })
     })
@@ -102,6 +102,12 @@ export class CustomerComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.loadCustomer(params);
       this.currentParams = params
+    })
+  }
+
+  deleteCustomer(){
+    deleteDoc(this.getDocument(this.currentParams)).then(()=>{
+      this.backToDashboard();
     })
   }
 }

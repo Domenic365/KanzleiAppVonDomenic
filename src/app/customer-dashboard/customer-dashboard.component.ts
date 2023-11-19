@@ -50,11 +50,11 @@ export class CustomerDashboardComponent implements OnInit{
 
 
   openCustomer(customerData: Customer) {
-    this.router.navigate(["editCustomer/" + customerData.id])
+    this.router.navigate(["editCustomer/" + customerData.id]).then()
   }
 
 
   newCustomer() {
-    this.router.navigate(["newCustomer"])
+    this.router.navigate(["newCustomer"]).then()
   }
 }

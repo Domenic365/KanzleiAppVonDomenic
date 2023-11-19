@@ -21,5 +21,6 @@ form{
 .buttonToRight{
   display: flex;
   justify-content: end;
+  gap: 1rem;
 }
 
