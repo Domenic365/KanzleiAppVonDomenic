@@ -3,6 +3,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BackendService} from "../backend.service";
 import {
+  addDoc,
   collection,
   collectionData,
   doc,
@@ -24,11 +25,11 @@ export class CustomerComponent implements OnInit {
   customer: any;
   customerForm = new FormGroup(
     {
-      customerID: new FormControl("Wird geladen"),
-      firstName: new FormControl("Wird geladen"),
-      secondName: new FormControl("Wird geladen"),
-      company: new FormControl("Wird geladen"),
-      address: new FormControl("Wird geladen"),
+      customerID: new FormControl(""),
+      firstName: new FormControl(""),
+      secondName: new FormControl(""),
+      company: new FormControl(""),
+      address: new FormControl(""),
     }
   )
 
@@ -37,13 +38,18 @@ export class CustomerComponent implements OnInit {
   firestore = inject(Firestore)
   backendService = inject(BackendService)
   currentParams: any;
+  isNewCustomer: boolean | undefined
 
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      this.loadCustomer(params);
-      this.currentParams = params
-    })
+    this.route.url.subscribe(segments => {
+      const path = segments[0]?.path;
+      if (path === 'newCustomer') {
+        this.isNewCustomer = true
+      } else {
+        this.subscribeToValues()
+      }
+    });
   }
 
   private loadCustomer(params: ParamMap) {
@@ -68,12 +74,11 @@ export class CustomerComponent implements OnInit {
   }
 
 
-  private getControl(key:string) {
-    const control =  this.customerForm.get(key)
-    if (control){
+  private getControl(key: string) {
+    const control = this.customerForm.get(key)
+    if (control) {
       return control;
     }
-
     return new FormControl("");
   }
 
@@ -82,6 +87,21 @@ export class CustomerComponent implements OnInit {
   }
 
   addOrEditCustomer() {
-    updateDoc(this.getDocument(this.currentParams), this.customerForm.value)
+    if (this.isNewCustomer) {
+      addDoc(this.backendService.getCollection(), this.customerForm.value).then(value => {
+        this.backToDashboard()
+      })
+    } else {
+      updateDoc(this.getDocument(this.currentParams), this.customerForm.value).then(value => {
+        this.backToDashboard()
+      })
+    }
+  }
+
+  private subscribeToValues() {
+    this.route.paramMap.subscribe(params => {
+      this.loadCustomer(params);
+      this.currentParams = params
+    })
   }
 }

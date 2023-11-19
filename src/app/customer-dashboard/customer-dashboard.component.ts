@@ -54,4 +54,7 @@ export class CustomerDashboardComponent implements OnInit{
   }
 
 
+  newCustomer() {
+    this.router.navigate(["newCustomer"])
+  }
 }

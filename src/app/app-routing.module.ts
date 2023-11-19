@@ -6,6 +6,7 @@ import {CustomerComponent} from "./customer/customer.component";
 const routes: Routes = [
   {path: "customerDashboard", component: CustomerDashboardComponent},
   {path: "editCustomer/:id", component: CustomerComponent},
+  {path: "newCustomer", component: CustomerComponent},
 ];
 
 @NgModule({

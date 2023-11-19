@@ -12,3 +12,4 @@
   }
   <tr mat-row (click)="openCustomer(row)"  *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<button (click)="newCustomer()"  class="fabButton"  mat-fab color="primary"><mat-icon>add</mat-icon></button>

@@ -5,35 +5,41 @@
 
 <form [formGroup]="customerForm" (ngSubmit)="addOrEditCustomer()">
   <div>
-      <section>
-    <mat-form-field>
-      <mat-label>Mandantennummer</mat-label>
-      <input formControlName="customerID" matInput>
-    </mat-form-field>
-  </section>
-  <section>
-    <mat-form-field>
-      <mat-label>Vorname</mat-label>
-      <input formControlName="firstName" matInput>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Nachname</mat-label>
-      <input formControlName="secondName" matInput>
-    </mat-form-field>
-  </section>
-  <section>
-    <mat-form-field>
-      <mat-label>Unternehmensname</mat-label>
-      <input formControlName="company" matInput>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Anschrift</mat-label>
-      <input formControlName="address" matInput>
-    </mat-form-field>
-  </section>
+    <section>
+      <mat-form-field>
+        <mat-label>Mandantennummer</mat-label>
+        <input formControlName="customerID" matInput>
+      </mat-form-field>
+    </section>
+    <section>
+      <mat-form-field>
+        <mat-label>Vorname</mat-label>
+        <input formControlName="firstName" matInput>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nachname</mat-label>
+        <input formControlName="secondName" matInput>
+      </mat-form-field>
+    </section>
+    <section>
+      <mat-form-field>
+        <mat-label>Unternehmensname</mat-label>
+        <input formControlName="company" matInput>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Anschrift</mat-label>
+        <input formControlName="address" matInput>
+      </mat-form-field>
+    </section>
   </div>
   <div class="buttonToRight">
-      <button mat-button >Änderungen speichern</button>
+      <button mat-flat-button color="primary" >
+        @if(isNewCustomer){
+          Erstellen
+        } @else {
+          Änderungen speichern
+        }
+      </button>
   </div>
 
 </form>
