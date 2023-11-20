@@ -17,6 +17,8 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {getFirestore, provideFirestore} from "@angular/fire/firestore";
 import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
+import {MatSelectModule} from "@angular/material/select";
+import {MatSortModule} from "@angular/material/sort";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6AgokPmFiAe_fHieIpRlPAqOuWwnIlUQ",
@@ -33,22 +35,24 @@ const firebaseConfig = {
     CustomerComponent,
     CustomerDashboardComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatIconModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatListModule,
-    MatButtonModule,
-    MatInputModule,
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideFirestore(() => getFirestore()),
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatListModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSelectModule,
+        provideFirebaseApp(() => initializeApp(firebaseConfig)),
+        provideFirestore(() => getFirestore()),
+        MatSortModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

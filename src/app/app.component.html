@@ -1,22 +1,5 @@
-<mat-drawer-container class="example-container container" [hasBackdrop]="false">
-  <mat-drawer #drawer [mode]="'push'">
-    <mat-toolbar  color="primary">
-      Menü
-    </mat-toolbar>
-    <mat-nav-list>
-      <mat-list>
-        <mat-list-item mat-list-item routerLink="customerDashboard">Mandanten</mat-list-item>
-      </mat-list>
-    </mat-nav-list>
-  </mat-drawer>
-  <mat-drawer-content class="content">
-      <mat-toolbar class="toolbar" color="primary">
-        <button mat-icon-button (click)="drawer.toggle()" class="example-icon"
-                aria-label="Example icon-button with menu icon">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span>KanzleiApp</span>
-      </mat-toolbar>
-    <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+<mat-toolbar class="toolbar" color="primary">
+  <span>KanzleiApp</span>
+</mat-toolbar>
+<router-outlet></router-outlet>
+

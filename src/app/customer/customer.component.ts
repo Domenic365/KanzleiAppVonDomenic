@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, Validators} from "@angular/forms";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {BackendService} from "../backend.service";
 import {
@@ -9,7 +9,6 @@ import {
   getDoc,
   updateDoc
 } from "@angular/fire/firestore";
-
 
 @Component({
   selector: 'app-customer',
@@ -28,12 +27,12 @@ export class CustomerComponent implements OnInit {
   isNewCustomer: boolean | undefined
   customerForm = this.fb.group(
     {
-      customerID: new FormControl(""),
-      firstName: new FormControl(""),
-      secondName: new FormControl(""),
-      company: new FormControl(""),
-      address: new FormControl(""),
-      employees: this.fb.array([this.fb.control('test')])
+      customerID: ["", [Validators.required, Validators.min(0)]],
+      firstName: ["", Validators.required],
+      secondName: ["", Validators.required],
+      company: [""],
+      address: ["", Validators.required],
+      employees: this.fb.array([])
     }
   )
 
@@ -49,15 +48,19 @@ export class CustomerComponent implements OnInit {
     });
   }
 
+  addEmptyEmployee() {
+    for (let i = 0; i < 3; i++) {
+      this.employees.push(this.fb.control("", [Validators.required]))
+    }
+  }
+
   private loadCustomer(params: ParamMap) {
     collectionData(this.backendService.getCollection()).subscribe(value => {
       getDoc(this.getDocument(params)).then(doc => {
         if (doc.exists()) {
           this.customer = doc.data();
+          this.loadEmployeesControls();
           this.setCustomerValues();
-          this.customer.employees.forEach((employee: any) => {
-            (this.customerForm.get('employees') as FormArray).push(this.fb.control(employee));
-          });
         }
       })
     })
@@ -87,15 +90,18 @@ export class CustomerComponent implements OnInit {
   }
 
   addOrEditCustomer() {
-    if (this.isNewCustomer) {
-      addDoc(this.backendService.getCollection(), this.customerForm.value).then(value => {
-        this.backToDashboard()
-      })
-    } else {
-      updateDoc(this.getDocument(this.currentParams), this.customerForm.value).then(value => {
-        this.backToDashboard()
-      })
+    if (this.customerForm.valid) {
+      if (this.isNewCustomer) {
+        addDoc(this.backendService.getCollection(), this.customerForm.value).then(value => {
+          this.backToDashboard()
+        })
+      } else {
+        updateDoc(this.getDocument(this.currentParams), this.customerForm.value).then(value => {
+          this.backToDashboard()
+        })
+      }
     }
+
   }
 
   private subscribeToValues() {
@@ -105,9 +111,19 @@ export class CustomerComponent implements OnInit {
     })
   }
 
-  deleteCustomer(){
-    deleteDoc(this.getDocument(this.currentParams)).then(()=>{
+  deleteCustomer() {
+    deleteDoc(this.getDocument(this.currentParams)).then(() => {
       this.backToDashboard();
+    })
+  }
+
+  get employees() {
+    return this.customerForm.get('employees') as FormArray;
+  }
+
+  loadEmployeesControls() {
+    this.customer.employees.forEach((employee: string) => {
+      this.employees.push(this.fb.control(employee, [Validators.required]))
     })
   }
 }
